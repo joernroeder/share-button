@@ -22,7 +22,7 @@
     config.title = opts.title;
     config.image = opts.image;
     config.flyout = opts.flyout || 'top center';
-    config.loadStyles = config.loadStyles || true;
+    config.loadStyles = opts.loadStyles != null ? opts.loadStyles : true;
     config.button_color = opts.color || '#333';
     config.button_background = opts.background || '#e1e1e1';
     config.button_icon = opts.icon || 'export';

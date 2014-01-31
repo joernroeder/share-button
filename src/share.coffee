@@ -54,7 +54,7 @@ $.fn.share = (opts) ->
 
     ## UI Configurations
 
-    config.loadStyles        = opts.loadStyles || true
+    config.loadStyles        = if opts.loadStyles? then opts.loadStyles else true
     config.button_color      = opts.color || '#333'
     config.button_background = opts.background || '#e1e1e1'
     config.button_icon       = opts.icon || 'export'
