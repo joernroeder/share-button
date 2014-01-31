@@ -22,6 +22,7 @@
     config.title = opts.title;
     config.image = opts.image;
     config.flyout = opts.flyout || 'top center';
+    config.loadStyles = config.loadStyles || true;
     config.button_color = opts.color || '#333';
     config.button_background = opts.background || '#e1e1e1';
     config.button_icon = opts.icon || 'export';
@@ -46,19 +47,19 @@
     if (typeof config.app_id === 'integer') {
       config.app_id = config.app_id.toString();
     }
-    if (!$('link[href="http://weloveiconfonts.com/api/?family=entypo"]').length) {
+    if (config.loadStyles && !$('link[href="http://weloveiconfonts.com/api/?family=entypo"]').length) {
       $("<link />").attr({
         rel: "stylesheet",
         href: "http://weloveiconfonts.com/api/?family=entypo"
       }).appendTo($("head"));
     }
-    if (!$('link[href="http://fonts.googleapis.com/css?family=Lato:900"]').length) {
+    if (config.loadStyles && !$('link[href="http://fonts.googleapis.com/css?family=Lato:900"]').length) {
       $("<link />").attr({
         rel: "stylesheet",
         href: "http://fonts.googleapis.com/css?family=Lato:900"
       }).appendTo($("head"));
     }
-    if (!$("meta[name='sharer" + config.selector + "']").length) {
+    if (config.loadStyles && !$("meta[name='sharer" + config.selector + "']").length) {
       $('head').append(getStyles(config)).append("<meta name='sharer" + config.selector + "'>");
     }
     $(this).html("<label class='entypo-" + config.button_icon + "'><span>" + config.button_text + "</span></label><div class='social " + config.flyout + "'><ul><li class='entypo-twitter' data-network='twitter'></li><li class='entypo-facebook' data-network='facebook'></li><li class='entypo-gplus' data-network='gplus'></li></ul></div>");

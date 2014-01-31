@@ -54,6 +54,7 @@ $.fn.share = (opts) ->
 
     ## UI Configurations
 
+    config.loadStyles        = config.loadStyles || true
     config.button_color      = opts.color || '#333'
     config.button_background = opts.background || '#e1e1e1'
     config.button_icon       = opts.icon || 'export'
@@ -89,7 +90,7 @@ $.fn.share = (opts) ->
     # Inject Icons #
     ################
 
-    unless $('link[href="http://weloveiconfonts.com/api/?family=entypo"]').length
+    if config.loadStyles and not $('link[href="http://weloveiconfonts.com/api/?family=entypo"]').length
       $("<link />").attr(
         rel: "stylesheet"
         href: "http://weloveiconfonts.com/api/?family=entypo"
@@ -100,7 +101,7 @@ $.fn.share = (opts) ->
     # Inject Fonts #
     ################
 
-    unless $('link[href="http://fonts.googleapis.com/css?family=Lato:900"]').length
+    if config.loadStyles and not $('link[href="http://fonts.googleapis.com/css?family=Lato:900"]').length
       $("<link />").attr(
         rel: "stylesheet"
         href: "http://fonts.googleapis.com/css?family=Lato:900"
@@ -111,7 +112,7 @@ $.fn.share = (opts) ->
     # Inject CSS #
     ##############
 
-    unless $("meta[name='sharer#{config.selector}']").length
+    if config.loadStyles and not $("meta[name='sharer#{config.selector}']").length
       $('head').append(getStyles(config))
                .append("<meta name='sharer#{config.selector}'>")
 
