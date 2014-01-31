@@ -55,11 +55,14 @@ $.fn.share = (opts) ->
     ## UI Configurations
 
     config.loadStyles        = if opts.loadStyles? then opts.loadStyles else true
+    config.icon_namespace    = opts.icon_namespace || 'entypo'
     config.button_color      = opts.color || '#333'
     config.button_background = opts.background || '#e1e1e1'
     config.button_icon       = opts.icon || 'export'
     config.button_text       = opts.button_text || 'Share'
+    config.service_icons     = opts.service_icons || {}
 
+    get_icon = (service) -> if config.service_icons[service] then config.service_icons[service] else service
     ## Network-Specific Configurations
 
     set_opt = (base,ext) -> if opts[base] then opts[base][ext] || config[ext] else config[ext]
@@ -85,15 +88,24 @@ $.fn.share = (opts) ->
     config.twitter_text = encodeURIComponent(config.twitter_text)
     config.app_id = config.app_id.toString() if typeof config.app_id == 'integer'
 
+    ###########################
+    # Share URL Configuration #
+    ###########################
+
+    paths =
+      twitter: "http://twitter.com/intent/tweet?text=#{config.twitter_text}&url=#{config.twitter_url}"
+      facebook: "https://www.facebook.com/sharer/sharer.php?u=#{config.fb_url}"
+      gplus: "https://plus.google.com/share?url=#{config.gplus_url}"
+
 
     ################
     # Inject Icons #
     ################
 
-    if config.loadStyles and not $('link[href="http://weloveiconfonts.com/api/?family=entypo"]').length
+    if config.loadStyles and not $('link[href="http://weloveiconfonts.com/api/?family=#{config.icon_namespace}"]').length
       $("<link />").attr(
         rel: "stylesheet"
-        href: "http://weloveiconfonts.com/api/?family=entypo"
+        href: "http://weloveiconfonts.com/api/?family=" + config.icon_namespace
       ).appendTo $("head")
 
 
@@ -120,8 +132,14 @@ $.fn.share = (opts) ->
     ###############
     # Inject HTML #
     ###############
+    
+    do =>
+      html_str = "<label class='#{config.icon_namespace}-#{config.button_icon}'><span>#{config.button_text}</span></label><div class='social #{config.flyout}'><ul>"
+      for service, path of paths
+        html_str += "<li class='#{config.icon_namespace}-#{get_icon(service)}' data-network='#{service}'></li>"
+      html_str += "</ul></div>"
 
-    $(@).html("<label class='entypo-#{config.button_icon}'><span>#{config.button_text}</span></label><div class='social #{config.flyout}'><ul><li class='entypo-twitter' data-network='twitter'></li><li class='entypo-facebook' data-network='facebook'></li><li class='entypo-gplus' data-network='gplus'></li></ul></div>")
+      $(@).html html_str
 
 
     #######################
@@ -131,15 +149,6 @@ $.fn.share = (opts) ->
     if !window.FB && config.app_id && ($('#fb-root').length is 0)
       protocol = if ['http', 'https'].indexOf(window.location.href.split(':')[0]) is -1 then 'https://' else '//'
       $body.append("<div id='fb-root'></div><script>(function(a,b,c){var d,e=a.getElementsByTagName(b)[0];a.getElementById(c)||(d=a.createElement(b),d.id=c,d.src='#{protocol}connect.facebook.net/en_US/all.js#xfbml=1&appId=#{config.app_id}',e.parentNode.insertBefore(d,e))})(document,'script','facebook-jssdk');</script>")
-
-    ###########################
-    # Share URL Configuration #
-    ###########################
-
-    paths =
-      twitter: "http://twitter.com/intent/tweet?text=#{config.twitter_text}&url=#{config.twitter_url}"
-      facebook: "https://www.facebook.com/sharer/sharer.php?u=#{config.fb_url}"
-      gplus: "https://plus.google.com/share?url=#{config.gplus_url}"
 
     ##############################
     # Popup/Share Links & Events #

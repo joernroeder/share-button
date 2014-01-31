@@ -7,7 +7,7 @@
   $head = $('head');
   $body = $('body');
   return $(this).each(function(i, el) {
-    var $sharer, bubble, bubbles, click_link, close, config, open, parent, paths, protocol, set_opt, toggle,
+    var $sharer, bubble, bubbles, click_link, close, config, get_icon, open, parent, paths, protocol, set_opt, toggle,
       _this = this;
     $sharer = $(this);
     $sharer.addClass("sharer-" + i);
@@ -23,10 +23,19 @@
     config.image = opts.image;
     config.flyout = opts.flyout || 'top center';
     config.loadStyles = opts.loadStyles != null ? opts.loadStyles : true;
+    config.icon_namespace = opts.icon_namespace || 'entypo';
     config.button_color = opts.color || '#333';
     config.button_background = opts.background || '#e1e1e1';
     config.button_icon = opts.icon || 'export';
     config.button_text = opts.button_text || 'Share';
+    config.service_icons = opts.service_icons || {};
+    get_icon = function(service) {
+      if (config.service_icons[service]) {
+        return config.service_icons[service];
+      } else {
+        return service;
+      }
+    };
     set_opt = function(base, ext) {
       if (opts[base]) {
         return opts[base][ext] || config[ext];
@@ -47,10 +56,15 @@
     if (typeof config.app_id === 'integer') {
       config.app_id = config.app_id.toString();
     }
-    if (config.loadStyles && !$('link[href="http://weloveiconfonts.com/api/?family=entypo"]').length) {
+    paths = {
+      twitter: "http://twitter.com/intent/tweet?text=" + config.twitter_text + "&url=" + config.twitter_url,
+      facebook: "https://www.facebook.com/sharer/sharer.php?u=" + config.fb_url,
+      gplus: "https://plus.google.com/share?url=" + config.gplus_url
+    };
+    if (config.loadStyles && !$('link[href="http://weloveiconfonts.com/api/?family=#{config.icon_namespace}"]').length) {
       $("<link />").attr({
         rel: "stylesheet",
-        href: "http://weloveiconfonts.com/api/?family=entypo"
+        href: "http://weloveiconfonts.com/api/?family=" + config.icon_namespace
       }).appendTo($("head"));
     }
     if (config.loadStyles && !$('link[href="http://fonts.googleapis.com/css?family=Lato:900"]').length) {
@@ -62,16 +76,20 @@
     if (config.loadStyles && !$("meta[name='sharer" + config.selector + "']").length) {
       $('head').append(getStyles(config)).append("<meta name='sharer" + config.selector + "'>");
     }
-    $(this).html("<label class='entypo-" + config.button_icon + "'><span>" + config.button_text + "</span></label><div class='social " + config.flyout + "'><ul><li class='entypo-twitter' data-network='twitter'></li><li class='entypo-facebook' data-network='facebook'></li><li class='entypo-gplus' data-network='gplus'></li></ul></div>");
+    (function() {
+      var html_str, path, service;
+      html_str = "<label class='" + config.icon_namespace + "-" + config.button_icon + "'><span>" + config.button_text + "</span></label><div class='social " + config.flyout + "'><ul>";
+      for (service in paths) {
+        path = paths[service];
+        html_str += "<li class='" + config.icon_namespace + "-" + (get_icon(service)) + "' data-network='" + service + "'></li>";
+      }
+      html_str += "</ul></div>";
+      return $(_this).html(html_str);
+    })();
     if (!window.FB && config.app_id && ($('#fb-root').length === 0)) {
       protocol = ['http', 'https'].indexOf(window.location.href.split(':')[0]) === -1 ? 'https://' : '//';
       $body.append("<div id='fb-root'></div><script>(function(a,b,c){var d,e=a.getElementsByTagName(b)[0];a.getElementById(c)||(d=a.createElement(b),d.id=c,d.src='" + protocol + "connect.facebook.net/en_US/all.js#xfbml=1&appId=" + config.app_id + "',e.parentNode.insertBefore(d,e))})(document,'script','facebook-jssdk');</script>");
     }
-    paths = {
-      twitter: "http://twitter.com/intent/tweet?text=" + config.twitter_text + "&url=" + config.twitter_url,
-      facebook: "https://www.facebook.com/sharer/sharer.php?u=" + config.fb_url,
-      gplus: "https://plus.google.com/share?url=" + config.gplus_url
-    };
     parent = $sharer.parent();
     bubbles = parent.find(".social");
     bubble = parent.find("" + config.selector + " .social");
