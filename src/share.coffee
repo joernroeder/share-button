@@ -161,7 +161,7 @@ $.fn.share = (opts) ->
 
     toggle = (e) ->
       e.stopPropagation()
-      bubble.toggleClass('active')
+      bubble.add(label).toggleClass('active')
 
     open = -> bubble.add(label).addClass('active')
 

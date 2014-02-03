@@ -96,7 +96,7 @@
     label = $sharer.find('label');
     toggle = function(e) {
       e.stopPropagation();
-      return bubble.toggleClass('active');
+      return bubble.add(label).toggleClass('active');
     };
     open = function() {
       return bubble.add(label).addClass('active');
