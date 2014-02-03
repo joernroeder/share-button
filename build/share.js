@@ -127,9 +127,7 @@
     };
     label.on('click', toggle);
     $sharer.find('li').on('click', click_link);
-    $body.on('click', function() {
-      return bubbles.removeClass('active');
-    });
+    $body.on('click', close);
     setTimeout((function() {
       return $sharer.show();
     }), 250);

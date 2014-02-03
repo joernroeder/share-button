@@ -188,7 +188,7 @@ $.fn.share = (opts) ->
     label.on 'click', toggle
     $sharer.find('li').on 'click', click_link
 
-    $body.on 'click', -> bubbles.removeClass('active')
+    $body.on 'click', close
 
     setTimeout (=> $sharer.show()), 250
 
