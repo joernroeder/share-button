@@ -7,7 +7,7 @@
   $head = $('head');
   $body = $('body');
   return $(this).each(function(i, el) {
-    var $sharer, bubble, bubbles, click_link, close, config, get_icon, open, parent, paths, protocol, set_opt, toggle,
+    var $sharer, bubble, bubbles, click_link, close, config, get_icon, label, open, parent, paths, protocol, set_opt, toggle,
       _this = this;
     $sharer = $(this);
     $sharer.addClass("sharer-" + i);
@@ -93,15 +93,16 @@
     parent = $sharer.parent();
     bubbles = parent.find(".social");
     bubble = parent.find("" + config.selector + " .social");
+    label = $sharer.find('label');
     toggle = function(e) {
       e.stopPropagation();
       return bubble.toggleClass('active');
     };
     open = function() {
-      return bubble.addClass('active');
+      return bubble.add(label).addClass('active');
     };
     close = function() {
-      return bubble.removeClass('active');
+      return bubble.add(label).removeClass('active');
     };
     click_link = function() {
       var link;
@@ -124,7 +125,7 @@
       }
       return false;
     };
-    $sharer.find('label').on('click', toggle);
+    label.on('click', toggle);
     $sharer.find('li').on('click', click_link);
     $body.on('click', function() {
       return bubbles.removeClass('active');

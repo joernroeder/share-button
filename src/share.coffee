@@ -157,14 +157,15 @@ $.fn.share = (opts) ->
     parent  = $sharer.parent()
     bubbles = parent.find(".social")
     bubble  = parent.find("#{config.selector} .social")
+    label   = $sharer.find('label')
 
     toggle = (e) ->
       e.stopPropagation()
       bubble.toggleClass('active')
 
-    open = -> bubble.addClass('active')
+    open = -> bubble.add(label).addClass('active')
 
-    close = -> bubble.removeClass('active')
+    close = -> bubble.add(label).removeClass('active')
 
     click_link = ->
       link = paths[$(@).data('network')]
@@ -184,7 +185,7 @@ $.fn.share = (opts) ->
         window.open(link, 'targetWindow', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=500,height=350')
       return false
 
-    $sharer.find('label').on 'click', toggle
+    label.on 'click', toggle
     $sharer.find('li').on 'click', click_link
 
     $body.on 'click', -> bubbles.removeClass('active')
