@@ -93,10 +93,11 @@ $.fn.share = (opts) ->
     ###########################
 
     paths =
-      twitter: "http://twitter.com/intent/tweet?text=#{config.twitter_text}&url=#{config.twitter_url}"
-      facebook: "https://www.facebook.com/sharer/sharer.php?u=#{config.fb_url}"
+      # editz by Johnny
+      twitter: "http://twitter.com/intent/tweet?text=#{config.twitter_text}&url=#{config.twitter_url}" 
+      #facebook: "https://www.facebook.com/sharer/sharer.php?u=#{config.fb_url}" 
+      facebook: "https://www.facebook.com/sharer/sharer.php?s=100&p[url]=#{config.fb_url}&p[title]=#{config.fb_title}&p[summary]=#{config.fb_text}&p[images][0]=#{config.fb_image}" 
       gplus: "https://plus.google.com/share?url=#{config.gplus_url}"
-
 
     ################
     # Inject Icons #
